@@ -41,7 +41,6 @@ class Entities::MainMenu
     title = Renderable::LabelItem.new(props: MENU_TITLE_PROPS, item: TITLE)
 #
 #      menu.add(
-#        position: {},
 #        item: Renderable::SelectionList.new(props: MENU_ITEM_PROPS).tap do |menu_list|
 #          MENU_ITEMS.each {|mi| menu_list.add(mi) }
 #        end
