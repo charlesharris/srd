@@ -13,6 +13,7 @@ def tick(args)
     #Components::MainMenuInput.update(args)
     #args.state.main_menu.render(args)
   end
+
   Renderable::Renderer.render(args)
   render_debug_messages(args)
 end

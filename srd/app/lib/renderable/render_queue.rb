@@ -20,4 +20,16 @@ class Renderable::RenderQueue
   def full?
     @limit != nil && @_queue.size >= @limit.to_i
   end
+
+  def serialize
+    { queue: @_queue }
+  end
+
+  def inspect
+    serialize.to_s
+  end
+
+  def to_s
+    serialize.to_s
+  end
 end

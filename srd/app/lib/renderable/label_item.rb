@@ -11,4 +11,8 @@ class Renderable::LabelItem < Renderable::Item
     @item.to_h
   end
 
+  def inspect
+    @item.to_h
+  end
+
 end
