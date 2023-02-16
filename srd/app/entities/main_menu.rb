@@ -12,9 +12,6 @@ class Entities::MainMenu
     font: FONT_DEFAULT_PATH
   }
 
-  COLOR_WHITE = { r: 255, g: 255, b: 255, a: 255 }
-  COLOR_BLACK = { r: 0, g: 0, b: 0, a: 255 }
-
   ITEM_SIZE = 5
   MENU_ITEMS = [
     { position: 1, label: :new_game, text: 'New Game', size: ITEM_SIZE },
@@ -25,11 +22,31 @@ class Entities::MainMenu
   MENU_ITEM_PROPS = {
     size: ITEM_SIZE,
     alignment: :centered,
-    foreground_color: COLOR_BLACK,
-    background_color: COLOR_WHITE,
-    selected_foreground_color: COLOR_WHITE,
-    selected_background_color: COLOR_BLACK
+    foreground_color: ::Colors::BLACK,
+    background_color: ::Colors::WHITE,
+    selected_foreground_color: ::Colors::WHITE,
+    selected_background_color: ::Colors::BLACK
   }
+
+  def serialize
+    {
+      constants: {
+        title_size: TITLE_SIZE,
+        title: TITLE,
+        menu_title_props: MENU_TITLE_PROPS,
+        item_size: ITEM_SIZE,
+        menu_item_props: MENU_ITEM_PROPS,
+      }
+    }
+  end
+
+  def inspect
+    serialize.to_s
+  end
+
+  def to_s
+    serialize.to_s
+  end
 
   attr_accessor :selected, :args, :menu_item_container
 
@@ -38,7 +55,10 @@ class Entities::MainMenu
     @selected = 0
 
     #@menu_container = Renderable::Container.new.tap do |menu|
-    title = Renderable::LabelItem.new(props: MENU_TITLE_PROPS, item: TITLE)
+    #@title = Renderable::LabelItem.new(props: MENU_TITLE_PROPS, item: TITLE)
+    @title = {}.merge!(TITLE).merge!(MENU_TITLE_PROPS)
+
+    @items 
 #
 #      menu.add(
 #        item: Renderable::SelectionList.new(props: MENU_ITEM_PROPS).tap do |menu_list|
@@ -46,12 +66,12 @@ class Entities::MainMenu
 #        end
 #      )
 
-    args.state.render_queue.push(title)
+    args.state.render_queue.push(self)
   end
 
-  def render_title(args)
-    title_label = {}.merge(TITLE)
-    args.outputs.labels << title_label
+  def render(args)
+    args.outputs.labels << @title.to_h
+
   end
 
   def text_size(text_item)
@@ -77,12 +97,12 @@ class Entities::MainMenu
         y: item_y - (item_h / 2) - item_margin * 2,
         w: item_w + item_margin,
         h: item_h + item_margin
-      }.merge(COLOR_BLACK)
+      }.merge(::Colors::BLACK)
 
       @args.outputs.solids << selection_box
-      item_color = COLOR_WHITE
+      item_color = ::Colors::WHITE
     else
-      item_color = COLOR_BLACK
+      item_color = ::Colors::BLACK
     end
 
     @args.outputs.labels << menu_item.merge(item_color)
@@ -108,5 +128,9 @@ class Entities::MainMenu
     selection = MENU_ITEMS[@selected_position]
     @args.state.game_mode = selection[:label]
   end
+
+  private
+
+  attr_accessor :title, :menu_items
 
 end
